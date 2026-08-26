@@ -1,0 +1,1161 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Truna — The Specialist Thesis</title>
+<style>
+:root{
+  --ground:#10151B; --panel:#161C24; --ink:#ECEAE3; --muted:#98A0A8; --faint:#5E6871;
+  --line:#242C35; --dag:#7E93AC; --dag-dim:#42505F; --loop:#E08A3C; --loop-soft:rgba(224,138,60,.14);
+  --serif:"Iowan Old Style","Palatino Nova",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --ground:#F2EFE8; --panel:#FFFFFF; --ink:#1C222A; --muted:#5A636D; --faint:#8B939C;
+    --line:#DCD7CC; --dag:#54687E; --dag-dim:#A9B6C3; --loop:#C26A1B; --loop-soft:rgba(194,106,27,.12);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#10151B; --panel:#161C24; --ink:#ECEAE3; --muted:#98A0A8; --faint:#5E6871;
+  --line:#242C35; --dag:#7E93AC; --dag-dim:#42505F; --loop:#E08A3C; --loop-soft:rgba(224,138,60,.14);
+}
+:root[data-theme="light"]{
+  --ground:#F2EFE8; --panel:#FFFFFF; --ink:#1C222A; --muted:#5A636D; --faint:#8B939C;
+  --line:#DCD7CC; --dag:#54687E; --dag-dim:#A9B6C3; --loop:#C26A1B; --loop-soft:rgba(194,106,27,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+
+#rings{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ---------- deck chrome ---------- */
+.deck{position:relative;z-index:1}
+body.slides{overflow:hidden;height:100vh}
+body.slides .deck{height:100vh}
+.slide{padding:clamp(28px,5vh,64px) clamp(22px,6vw,88px) clamp(58px,9vh,88px)}
+body.slides .slide{position:absolute;inset:0;overflow-y:auto;opacity:0;visibility:hidden;
+  transform:scale(1.045);
+  transition:opacity .45s ease,transform .45s ease,visibility .45s;
+  display:flex;flex-direction:column;justify-content:center}
+body.slides .slide.active{opacity:1;visibility:visible;transform:scale(1)}
+@media (prefers-reduced-motion: reduce){
+  body.slides .slide{transition:none;transform:none}
+}
+body:not(.slides) .slide{min-height:92vh;border-bottom:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:center}
+
+.hud{position:fixed;left:0;right:0;bottom:0;z-index:9;pointer-events:none;display:none}
+body.slides .hud{display:block}
+.hud .row{display:flex;justify-content:space-between;align-items:center;
+  padding:10px clamp(22px,6vw,88px) 14px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;color:var(--faint)}
+.hud .keys{text-transform:uppercase}
+.hud .right{display:flex;align-items:center;gap:12px}
+.hud svg{display:block}
+.hud .track{stroke:var(--line)}
+.hud .fill{stroke:var(--loop);transition:stroke-dashoffset .4s ease;
+  transform:rotate(-90deg);transform-origin:center}
+.hud button{pointer-events:auto;background:none;border:1px solid var(--line);color:var(--muted);
+  font-family:var(--mono);font-size:13px;line-height:1;padding:6px 12px;border-radius:4px;
+  cursor:pointer}
+.hud button:hover,.hud button:focus-visible{border-color:var(--loop);color:var(--ink);outline:none}
+
+/* ---------- shared anatomy ---------- */
+.inner{max-width:1020px;width:100%;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--loop);margin:0 0 24px}
+h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,6.6vw,82px);line-height:1.04}
+h2{font-size:clamp(32px,5vw,60px);line-height:1.1;margin-bottom:26px}
+.lede{font-size:clamp(17px,2.1vw,23px);color:var(--muted);max-width:34em;margin:22px 0 0}
+.lede b,.body b{color:var(--ink);font-weight:600}
+.body{font-size:clamp(16px,1.8vw,20px);color:var(--muted);max-width:34em;margin:0 0 14px}
+.kicker{margin-top:30px;padding:18px 22px;border-left:2px solid var(--loop);
+  background:var(--loop-soft);border-radius:0 8px 8px 0;max-width:40em}
+.kicker p{margin:0;font-family:var(--serif);font-size:clamp(18px,2.3vw,25px);line-height:1.4;color:var(--ink)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,56px);align-items:center}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.fig{margin:0}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--faint);
+  margin-top:10px}
+.fig text{paint-order:stroke;stroke:var(--ground);stroke-width:5px;stroke-linejoin:round}
+
+ul.marks{list-style:none;margin:8px 0 0;padding:0;max-width:40em}
+ul.marks li{position:relative;padding:12px 0 12px 32px;color:var(--muted);
+  font-size:clamp(15px,1.7vw,18px);border-bottom:1px solid var(--line)}
+ul.marks li:last-child{border-bottom:none}
+ul.marks li::before{content:"";position:absolute;left:2px;top:22px;width:9px;height:9px;
+  border:2px solid var(--loop);border-radius:50%}
+ul.marks li b{color:var(--ink);font-weight:600}
+.now{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  color:var(--loop);margin-top:3px}
+.apptag{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dag);margin-bottom:3px}
+
+/* title + close */
+.s-title .brand{font-family:var(--mono);font-size:12px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--loop);margin:0 0 32px}
+.closing{margin-top:44px;font-family:var(--serif);font-weight:500;
+  font-size:clamp(26px,3.8vw,44px);line-height:1.15;color:var(--loop);letter-spacing:-.01em}
+.endfoot{margin-top:52px;font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint)}
+
+/* stacked feature rows */
+.stack{margin:18px 0 0;padding:0;list-style:none;max-width:46em}
+.stack li{display:grid;grid-template-columns:26px 1fr;gap:16px;align-items:center;
+  padding:16px 18px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;
+  background:var(--panel)}
+.stack .glyph{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--loop);justify-self:center}
+.stack .lvl{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--loop);font-weight:600}
+.stack .what{font-size:clamp(14.5px,1.6vw,16.5px);color:var(--muted);min-width:0}
+.stack .what b{color:var(--ink)}
+@media(max-width:760px){
+  .stack li{grid-template-columns:22px 1fr;grid-auto-rows:auto}
+  .stack .what{grid-column:2}
+}
+
+/* faq */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:760px){.faq{grid-template-columns:1fr}}
+.faq .qa{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--panel)}
+.faq .q{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;color:var(--loop);
+  margin:0 0 8px;font-weight:600}
+.faq .a{margin:0;font-size:14.5px;color:var(--muted)}
+.faq .a b{color:var(--ink)}
+
+/* refs */
+.refs{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-top:22px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--faint)}
+.refs .rl{letter-spacing:.2em;text-transform:uppercase;color:var(--loop);margin-right:4px}
+.refs a{color:var(--faint);text-decoration:underline;
+  text-decoration-style:dotted;text-underline-offset:3px}
+.refs a:hover,.refs a:focus-visible{color:var(--loop);outline:none}
+
+/* three-cell grids (team + exhibit) */
+.tri{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:26px}
+@media(max-width:860px){.tri{grid-template-columns:1fr}}
+.tri .cell{border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;
+  background:var(--panel);display:flex;flex-direction:column;gap:10px}
+.tri .cell.win{border-color:var(--loop);box-shadow:0 0 0 1px var(--loop-soft)}
+.tri .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  margin:0;color:var(--dag)}
+.tri .cell.win .tag{color:var(--loop)}
+.tri h3{font-family:var(--serif);font-size:clamp(18px,2vw,23px);margin:0;font-weight:500;line-height:1.2}
+.tri p{margin:0;font-size:14px;color:var(--muted)}
+.tri p b{color:var(--ink)}
+
+/* team extras */
+.evrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px;max-width:56em}
+.evrow img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:8px;
+  border:1px solid var(--line);display:block}
+.evcap{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint);
+  margin-top:8px;text-transform:uppercase}
+@media(max-width:680px){.evrow{grid-template-columns:1fr 1fr}}
+.logos{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.logos .lchip{background:#fff;border-radius:8px;padding:8px 14px;display:flex;
+  align-items:center;height:44px}
+.logos .lchip img{height:26px;width:auto;display:block}
+
+/* flood grid */
+.floodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.floodgrid img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;
+  border:1px solid var(--line);display:block;filter:saturate(.55) brightness(.8)}
+.floodcap{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint);
+  margin-top:8px;text-transform:uppercase}
+
+/* coverage video grid */
+.vidgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:860px){.vidgrid{grid-template-columns:1fr}}
+.vidgrid video{width:100%;height:auto;display:block;border-radius:10px;
+  border:1px solid var(--line);background:#fff}
+.vidgrid figcaption{margin-top:6px}
+
+/* stat row */
+.statrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.statrow .stat{border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  padding:12px 18px;min-width:150px}
+.statrow .stat.hot{border-color:var(--loop);box-shadow:0 0 0 1px var(--loop-soft)}
+.statrow .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,2.4vw,28px);
+  color:var(--ink);line-height:1.1}
+.statrow .stat.hot .v{color:var(--loop)}
+.statrow .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin-top:4px}
+
+/* coverage comparison table */
+.covtab{border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  overflow-x:auto;margin-top:18px;max-width:34em}
+.covtab table{border-collapse:collapse;width:100%;font-size:13.5px}
+.covtab th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);text-align:left;padding:10px 16px;border-bottom:1px solid var(--line)}
+.covtab td{padding:9px 16px;border-bottom:1px solid var(--line);color:var(--muted)}
+.covtab tr:last-child td{border-bottom:none}
+.covtab td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.covtab tr.us td{color:var(--ink);font-weight:600;background:var(--loop-soft)}
+
+/* print */
+@media print{
+  @page{size:15in 9.375in;margin:0}
+  html,body{background:var(--ground)!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #rings,.hud{display:none!important}
+  body:not(.slides) .slide{height:100vh;min-height:0;overflow:hidden;
+    border-bottom:none;break-after:page;break-inside:avoid}
+  .endfoot{visibility:hidden}
+}
+
+/* ---- v6 minimal / headline style ---- */
+.mega .inner{display:flex;flex-direction:column;justify-content:center;min-height:70vh}
+.huge{font-family:var(--serif);font-weight:500;font-size:clamp(40px,6.2vw,92px);
+  line-height:1.07;margin:0;letter-spacing:-.012em;max-width:12.5em}
+.huge .accent{color:var(--loop)}
+.sub{font-size:clamp(15px,1.35vw,19px);color:var(--muted);margin-top:28px;max-width:38em;line-height:1.55}
+.sub b{color:var(--ink)}
+.neq{font-family:var(--serif);font-size:clamp(60px,9vw,150px);color:var(--loop);line-height:1;margin:10px 0}
+.bigstats{display:flex;gap:56px;margin-top:44px;flex-wrap:wrap;align-items:flex-end}
+.bigstats .bs .v{font-family:var(--serif);font-size:clamp(46px,6.4vw,104px);line-height:1;color:var(--loop)}
+.bigstats .bs.dim .v{color:var(--faint)}
+.bigstats .bs .k{font-size:14px;color:var(--muted);margin-top:12px;max-width:17em;line-height:1.45}
+.rowlist{margin-top:36px;display:flex;flex-direction:column;max-width:56em}
+.rowlist .r{padding:13px 0;border-top:1px solid var(--line);font-size:clamp(15px,1.3vw,18px);color:var(--muted);line-height:1.5}
+.rowlist .r b{color:var(--ink)}
+.mathstrip{font-family:var(--mono);font-size:clamp(14px,1.5vw,21px);color:var(--ink);margin-top:30px;letter-spacing:.02em}
+.mathstrip .hot{color:var(--loop)}
+.tfaces{display:flex;gap:40px;margin-top:40px;flex-wrap:wrap}
+.tfaces .tf{display:flex;align-items:center;gap:14px}
+.tfaces img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--line)}
+.tfaces .nm{font-size:15px;color:var(--ink)}
+.tfaces .rl{font-size:12.5px;color:var(--faint);font-family:var(--mono);letter-spacing:.05em}
+
+
+/* ---- story tracker ---- */
+.track{display:flex;gap:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:12px;flex-wrap:wrap;row-gap:6px}
+.track span{color:var(--faint);opacity:.6}
+.track span.on{color:var(--loop);opacity:1}
+
+
+/* ---- mobile (portrait phones) ---- */
+@media(max-width:640px){
+  body.slides .slide{overflow-x:hidden}
+  .inner{max-width:100%}
+  .huge{font-size:clamp(30px,9vw,48px);max-width:100%}
+  .sub{font-size:15px;max-width:100%}
+  .track{font-size:9px;gap:10px}
+  .mathstrip{font-size:13px}
+  .bigstats{gap:26px}
+  .bigstats .bs .v{font-size:46px}
+  .rowlist{max-width:100%}
+  .rowlist .r{font-size:14px}
+  #exhibit-a .tri{grid-template-columns:1fr !important}
+  .tfaces{gap:18px}
+  .inner img,.inner svg,.inner video{max-width:100%;height:auto}
+  .hud .keys{display:none}
+  .hud .row{justify-content:flex-end}
+  .mega .inner{justify-content:flex-start;min-height:0}
+}
+
+
+/* hide the whole bottom bar when space is tight (small laptops & phones) */
+@media (max-width: 700px), (max-height: 800px){
+  body.slides .hud{display:none}
+}
+
+
+/* keep tall mega slides inside the viewport */
+.mega .fig svg{max-height:42vh}
+@media (max-height: 920px){
+  .huge{font-size:clamp(30px,4.6vw,64px)}
+  .neq{font-size:clamp(40px,6vw,90px);margin:4px 0}
+  .sub{margin-top:16px;font-size:clamp(14px,1.2vw,17px)}
+  .mega .inner{min-height:0;justify-content:flex-start}
+  .mega .fig svg{max-height:36vh}
+  .bigstats{margin-top:24px;gap:36px}
+}
+/* landscape phones: very short viewports */
+@media (max-height: 520px){
+  .huge{font-size:clamp(22px,7vh,34px)}
+  .neq{font-size:clamp(30px,10vh,48px)}
+  .sub{font-size:14px;margin-top:12px}
+  .track{font-size:9px;gap:10px}
+  .mega .fig svg{max-height:60vh}
+}
+
+
+/* side-by-side text+figure on wide viewports */
+.mfig{margin-top:34px}
+@media (min-width: 1000px){
+  .mega .inner.split{display:flex;flex-direction:row;align-items:center;gap:clamp(36px,4vw,72px)}
+  .split .mtext{flex:1 1 54%;min-width:0}
+  .split .mfig{flex:0 1 44%;min-width:0;margin-top:0}
+  .split .mfig .fig svg{max-height:66vh}
+  .split .bigstats{margin-top:18px;gap:18px}
+  .split .bigstats .bs .v{font-size:clamp(36px,3.6vw,64px)}
+  .split .bigstats .bs .k{font-size:13px}
+  .split .huge{font-size:clamp(30px,3.9vw,58px)}
+}
+
+
+/* videos slide on short laptop screens: one row of four */
+@media (min-width: 1000px) and (max-height: 920px){
+  #filling .vidgrid{grid-template-columns:repeat(4,1fr);gap:10px}
+  #filling .body{font-size:14.5px;max-width:64em}
+  #filling h2{font-size:clamp(26px,3vw,44px)}
+}
+
+
+/* exhibit on short laptop screens: one row of four, compact cells */
+@media (min-width: 1000px) and (max-height: 920px){
+  #exhibit-a .tri{grid-template-columns:repeat(4,1fr) !important;gap:12px}
+  #exhibit-a h2{font-size:clamp(24px,2.6vw,40px)}
+  #exhibit-a .tri .cell{padding:12px 12px 10px}
+  #exhibit-a .tri h3{font-size:15px}
+  #exhibit-a .tri p{font-size:12px}
+}
+
+
+/* founder profiles on small/vertical screens: images shrink to thumbnails */
+@media (max-width: 760px){
+  .evrow{grid-template-columns:repeat(4,1fr) !important;gap:8px}
+  .evrow img{height:56px;object-fit:cover}
+  .pavatar{width:60px !important;height:60px !important}
+  #p-nitin h2, #p-gagan h2, #p-avinash h2{font-size:clamp(24px,7vw,34px)}
+}
+
+</style>
+
+<canvas id="rings" aria-hidden="true"></canvas>
+
+<div class="deck" id="deck">
+
+<!-- 1 · TITLE -->
+<section class="slide s-title" id="s1">
+  <div class="inner">
+    <p class="brand">Truna &middot; truna.ai</p>
+    <h1>General models know everything.<br>They're experts at nothing.</h1>
+    <p class="lede"><b>We train expert models</b> — built to
+    <b>run a business function end to end</b>, at a fraction of the cost.</p>
+  </div>
+</section>
+
+<section class="slide mega" id="expected">
+  <div class="inner split"><div class="mtext">
+    <p class="eyebrow">the gap</p>
+    <h2 class="huge">The world expected AI to run companies.</h2>
+  
+    </div>
+    <div class="mfig" style="max-width:720px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 330" role="img" aria-label="The promised org: a triangle of autonomous AI roles — CEO at the top, CFO and CTO below, then sales, product and marketing, then lawyer and engineer">
+          <path d="M220 30 L408 300 L32 300 Z" fill="none" stroke="var(--dag)" stroke-width="1.4"/>
+          <g stroke="var(--dag-dim)" stroke-width="1" stroke-dasharray="3 5" fill="none">
+            <path d="M220 62 L150 138"/><path d="M220 62 L290 138"/>
+            <path d="M150 138 L290 138"/>
+            <path d="M150 138 L104 212"/><path d="M150 138 L220 212"/>
+            <path d="M290 138 L220 212"/><path d="M290 138 L336 212"/>
+            <path d="M104 212 L150 276"/><path d="M220 212 L150 276"/><path d="M220 212 L290 276"/>
+            <path d="M336 212 L290 276"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--ink)" text-anchor="middle">
+            <text x="220" y="56" fill="var(--loop)">CEO</text>
+            <text x="150" y="134">CFO</text>
+            <text x="290" y="134">CTO</text>
+            <text x="104" y="208">SALES</text>
+            <text x="220" y="208">PRODUCT</text>
+            <text x="336" y="208">MKT</text>
+            <text x="150" y="272">LAWYER</text>
+            <text x="290" y="272">ENGINEER</text>
+          </g>
+          <text x="220" y="324" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">the dream &middot; every seat autonomous &middot; always on</text>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="got">
+  <div class="inner">
+    <h2 class="huge">It got scaffolding.</h2>
+    <p class="sub">Harnesses, workflows, agent frameworks — <b>steps that repeat.</b></p>
+  </div>
+</section>
+
+<section class="slide mega" id="neq">
+  <div class="inner split"><div class="mtext">
+    <h2 class="huge">General intelligence</h2>
+    <div class="neq">&ne;</div>
+    <h2 class="huge">Focused expertise</h2>
+    <p class="sub">A general model spreads finite capacity over everything.
+    <b>An expert concentrates it on one seat</b> — and knows what it doesn't know.</p>
+  
+    </div>
+    <div class="mfig" style="max-width:620px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 370" role="img" aria-label="A large circle for the whole data space with a small dense circle inside it for one business role; below, the inequality M expert is greater than M general inside the expert space">
+          <circle cx="220" cy="140" r="118" fill="none" stroke="var(--dag)" stroke-width="1.5" stroke-dasharray="7 7" opacity=".8"/>
+          <text x="220" y="42" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="var(--dag)">the whole data space</text>
+          <text x="220" y="58" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--faint)">frontier models train here</text>
+          <circle cx="256" cy="176" r="34" fill="var(--loop-soft)" stroke="var(--loop)" stroke-width="2.2"/>
+          <text x="256" y="173" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--loop)">one expert</text>
+          <text x="256" y="187" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9" fill="var(--muted)">CEO space</text>
+          <path d="M132 242 Q 178 234, 230 201" fill="none" stroke="var(--loop)" stroke-width="1.4"/>
+          <text x="118" y="252" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--loop)">same B params,</text>
+          <text x="118" y="266" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--loop)">trained only here</text>
+          <g font-family="ui-monospace,Menlo,monospace" text-anchor="middle">
+            <text x="220" y="330" font-size="24" fill="var(--ink)">M<tspan font-size="13" dy="5">expert</tspan><tspan dy="-5" dx="8">&gt;</tspan><tspan dx="8">M</tspan><tspan font-size="13" dy="5">general</tspan></text>
+            <text x="220" y="356" font-size="10" fill="var(--faint)">inside the expert space &middot; equal parameter count</text>
+          </g>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="flow">
+  <div class="inner split"><div class="mtext">
+    <h2 class="huge">In a harness, intelligence flows in.</h2>
+    <p class="sub">An expert weighs risk against opportunity, states its assumptions,
+    acknowledges its unknowns — and builds <b>assets that compound, not steps that repeat.</b></p>
+  
+    </div>
+    <div class="mfig" style="max-width:720px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 330" role="img" aria-label="Left: a general model with intelligence piped in from human-written prompts, workflows and judges. Right: a specialist model with intelligence flowing out — making its own scaffolding, team, trust and relationships">
+          <defs>
+            <marker id="fl-in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--dag-dim)"/>
+            </marker>
+            <marker id="fl-out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--loop)"/>
+            </marker>
+          </defs>
+          <!-- left: intelligence in -->
+          <rect x="52" y="128" width="110" height="58" rx="10" fill="var(--panel)" stroke="var(--dag)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text x="107" y="152" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--muted)">general</text>
+          <text x="107" y="167" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--muted)">model</text>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9" fill="var(--faint)" text-anchor="middle">
+            <text x="107" y="40">prompts</text>
+            <text x="30" y="110">workflows</text>
+            <text x="184" y="110">judges</text>
+            <text x="30" y="228">guardrails</text>
+          </g>
+          <g stroke="var(--dag-dim)" stroke-width="1.4" fill="none">
+            <path d="M107 48 L107 120" marker-end="url(#fl-in)"/>
+            <path d="M34 118 L68 136" marker-end="url(#fl-in)"/>
+            <path d="M180 118 L146 136" marker-end="url(#fl-in)"/>
+            <path d="M36 218 L68 182" marker-end="url(#fl-in)"/>
+          </g>
+          <text x="107" y="268" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--dag)">intelligence flows in</text>
+          <text x="107" y="284" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9" fill="var(--faint)">per-case &middot; human-fed &middot; brittle</text>
+          <!-- right: intelligence out -->
+          <rect x="282" y="128" width="110" height="58" rx="10" fill="var(--loop-soft)" stroke="var(--loop)" stroke-width="2"/>
+          <text x="337" y="152" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--loop)">specialist</text>
+          <text x="337" y="167" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--loop)">model</text>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9" fill="var(--muted)" text-anchor="middle">
+            <text x="337" y="40">its own scaffolding</text>
+            <text x="260" y="110">its team</text>
+            <text x="414" y="110">trust</text>
+            <text x="414" y="228">relationships</text>
+          </g>
+          <g stroke="var(--loop)" stroke-width="1.6" fill="none">
+            <path d="M337 120 L337 48" marker-end="url(#fl-out)"/>
+            <path d="M296 130 L266 116" marker-end="url(#fl-out)"/>
+            <path d="M378 130 L408 116" marker-end="url(#fl-out)"/>
+            <path d="M378 184 L408 218" marker-end="url(#fl-out)"/>
+          </g>
+          <text x="337" y="268" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--loop)">intelligence flows out</text>
+          <text x="337" y="284" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="9" fill="var(--faint)">self-made &middot; nurtured &middot; compounding</text>
+          <text x="220" y="318" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--faint)">the direction of flow is the whole difference</text>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="fix">
+  <div class="inner">
+    <h2 class="huge">Focused models are the fix.</h2>
+    <p class="sub">For example, one model per role — <b>M<sub>CEO</sub>, M<sub>CTO</sub>,
+    M<sub>SALES</sub></b> — each trained to run its function end to end.
+    The same holds for any focused function.</p>
+  </div>
+</section>
+
+<section class="slide mega" id="dne">
+  <div class="inner split"><div class="mtext">
+    <p class="eyebrow">the blocker</p>
+    <h2 class="huge" style="font-size:clamp(26px,3.4vw,52px);margin-bottom:14px">Required training data</h2>
+    <h2 class="huge accent" style="color:var(--loop)">Does.<br>Not.<br>Exist.</h2>
+    <p class="sub"><b>Nobody logs the decisions they didn't take.</b> No dataset covers
+    a role's full space.</p>
+  
+    </div>
+    <div class="mfig" style="max-width:620px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 340" role="img" aria-label="A large irregular region labeled CEO space containing labeled sub-spaces for car, FMCG, bank, startup and other company CEOs">
+          <path d="M78 90 C 110 34, 300 22, 360 78 C 418 132, 400 250, 330 292 C 250 338, 120 320, 76 258 C 40 208, 46 140, 78 90 Z"
+                fill="none" stroke="var(--dag)" stroke-width="1.6"/>
+          <text x="220" y="60" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11.5" fill="var(--dag)">CEO space</text>
+          <g fill="var(--loop)">
+            <circle cx="150" cy="140" r="15"/>
+            <circle cx="286" cy="122" r="7"/>
+            <circle cx="330" cy="206" r="12"/>
+            <circle cx="206" cy="216" r="10"/>
+            <circle cx="136" cy="256" r="8"/>
+            <circle cx="252" cy="272" r="5"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--muted)">
+            <text x="150" y="118" text-anchor="middle">car CEO</text>
+            <text x="286" y="108" text-anchor="middle">startup CEO</text>
+            <text x="348" y="188" text-anchor="end">FMCG CEO</text>
+            <text x="206" y="242" text-anchor="middle">bank CEO</text>
+            <text x="136" y="280" text-anchor="middle">power CEO</text>
+            <text x="252" y="294" text-anchor="middle">xyz co. CEO</text>
+          </g>
+          <text x="220" y="332" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">a million companies &middot; each with its own unique sub-space</text>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="wall">
+  <div class="inner">
+    <h2 class="huge">Four ways to get the data.<br>One wall.</h2>
+    <div class="rowlist">
+      <div class="r"><b>human-made &middot; bought</b> — too small, too shallow, already priced at $1B+/yr</div>
+      <div class="r"><b>human-made &middot; commissioned</b> — experts can't write down what they never logged</div>
+      <div class="r"><b>synthetic &middot; seed-bound</b> — collapses back onto its seed examples</div>
+      <div class="r"><b>synthetic &middot; self-limited</b> — the generator runs out before the space is covered</div>
+    </div>
+    <p class="sub"><b>Every generator halts before the space is covered.</b></p>
+  </div>
+</section>
+
+<section class="slide mega" id="dhp">
+  <div class="inner">
+    <h2 class="huge">The <span class="accent">Data Halting Problem.</span></h2>
+    <p class="sub">Every known way of making data stops before the space is covered.
+    <br>(Our coinage — the field hasn't even named it yet.)</p>
+  </div>
+</section>
+
+<section class="slide mega" id="machine">
+  <div class="inner split"><div class="mtext">
+    <p class="eyebrow">our solution</p>
+    <h2 class="huge">The data machine<br>that doesn't halt.</h2>
+    <p class="sub">(The machine that writes the missing data — and knows when the
+    space is full.)</p>
+    <p class="sub" style="margin-top:14px">seeds &rarr; <b>data machine</b> &rarr;
+    M<sub>CEO</sub> &middot; M<sub>CTO</sub> &middot; M<sub>SALES</sub></p>
+  
+    </div>
+    <div class="mfig" style="max-width:760px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 330" role="img" aria-label="Pipeline: seeds feed a data engine, the data engine trains specialist models">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--loop)"/>
+            </marker>
+          </defs>
+          <g stroke="var(--dag)" stroke-width="1.6" fill="var(--panel)">
+            <rect x="30" y="30" width="380" height="62" rx="10"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="12">
+            <text x="220" y="56" text-anchor="middle" fill="var(--ink)">seeds</text>
+            <text x="220" y="76" text-anchor="middle" fill="var(--faint)" font-size="10">role knowledge &middot; a company's own data &amp; ontology</text>
+          </g>
+          <path d="M220 92 L220 122" stroke="var(--loop)" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+          <g stroke="var(--loop)" stroke-width="2" fill="var(--loop-soft)">
+            <rect x="30" y="128" width="380" height="62" rx="10"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="12">
+            <text x="220" y="150" text-anchor="middle" fill="var(--loop)">the data engine</text>
+            <text x="220" y="167" text-anchor="middle" fill="var(--faint)" font-size="9.5">synthetic-data generation</text>
+            <text x="220" y="182" text-anchor="middle" fill="var(--faint)" font-size="9.5">measured coverage of the expert space</text>
+          </g>
+          <path d="M220 190 L220 220" stroke="var(--loop)" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+          <g stroke="var(--dag)" stroke-width="1.6" fill="var(--panel)">
+            <rect x="30" y="226" width="116" height="56" rx="10"/>
+            <rect x="162" y="226" width="116" height="56" rx="10"/>
+            <rect x="294" y="226" width="116" height="56" rx="10"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="var(--ink)" text-anchor="middle">
+            <text x="88" y="250">M</text><text x="97" y="255" font-size="9">CEO</text>
+            <text x="220" y="250">M</text><text x="229" y="255" font-size="9">CTO</text>
+            <text x="352" y="250">M</text><text x="361" y="255" font-size="9">SALES</text>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--faint)" text-anchor="middle">
+            <text x="88" y="272">specialist</text>
+            <text x="220" y="272">specialist</text>
+            <text x="352" y="272">specialist</text>
+          </g>
+          <text x="220" y="318" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">seeds &rarr; covered data &rarr; expert models</text>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="seeding">
+  <div class="inner split"><div class="mtext">
+    <h2 class="huge">Seed the machine with anything.<br>It never stops.</h2>
+    <p class="sub">It revisits every region from many directions — <b>overlapping passes
+    cancel each other's errors.</b> The data gets cleaner as it grows.</p>
+  
+    </div>
+    <div class="mfig" style="max-width:760px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 360" role="img" aria-label="Data sequences growing from seed scenarios: chains of steps extend rightward opening new regions; some regions are revisited from diverse directions so signal amplifies and errors average out">
+          <defs>
+            <marker id="sq-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="var(--dag-dim)"/>
+            </marker>
+          </defs>
+          <text x="46" y="40" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" fill="var(--ink)">seeds</text>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9.5">
+            <text x="416" y="40" text-anchor="end" fill="var(--loop)">&#9679; opens a new region</text>
+            <text x="416" y="56" text-anchor="end" fill="var(--dag)">&#9679; diverse revisit &middot; error cancels</text>
+          </g>
+          <!-- sequence rows -->
+          <g stroke="var(--dag-dim)" stroke-width="1.2" fill="none">
+            <path d="M56 84 L350 84"/>
+            <path d="M56 150 L290 150"/>
+            <path d="M56 216 L350 216"/>
+            <path d="M56 282 L230 282"/>
+          </g>
+          <g stroke="var(--dag-dim)" stroke-width="1.2" fill="none" stroke-dasharray="3 6">
+            <path d="M356 84 L404 84" marker-end="url(#sq-ar)"/>
+            <path d="M296 150 L404 150" marker-end="url(#sq-ar)"/>
+            <path d="M356 216 L404 216" marker-end="url(#sq-ar)"/>
+            <path d="M236 282 L404 282" marker-end="url(#sq-ar)"/>
+          </g>
+          <!-- seeds -->
+          <g fill="var(--loop-soft)" stroke="var(--loop)" stroke-width="2">
+            <circle cx="46" cy="84" r="10"/><circle cx="46" cy="150" r="10"/>
+            <circle cx="46" cy="216" r="10"/><circle cx="46" cy="282" r="10"/>
+          </g>
+          <!-- generated steps -->
+          <g fill="var(--loop)">
+            <circle cx="110" cy="84" r="6"/><circle cx="170" cy="84" r="6"/><circle cx="290" cy="84" r="6"/><circle cx="350" cy="84" r="6"/>
+            <circle cx="110" cy="150" r="6"/><circle cx="230" cy="150" r="6"/><circle cx="290" cy="150" r="6"/>
+            <circle cx="110" cy="216" r="6"/><circle cx="170" cy="216" r="6"/><circle cx="230" cy="216" r="6"/><circle cx="350" cy="216" r="6"/>
+            <circle cx="110" cy="282" r="6"/><circle cx="170" cy="282" r="6"/><circle cx="230" cy="282" r="6"/>
+          </g>
+          <!-- diverse revisits: same region reached from different sequences -->
+          <g fill="var(--dag)">
+            <circle cx="230" cy="84" r="6"/><circle cx="170" cy="150" r="6"/><circle cx="290" cy="216" r="6"/>
+          </g>
+          <text x="230" y="320" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">generation stops only when the space is fully covered</text>
+          <text x="230" y="338" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">overlaps cancel each other's errors — the data gets cleaner as it grows</text>
+        </svg>
+      </figure></div>
+  </div>
+</section>
+
+<section class="slide mega" id="coverage">
+  <div class="inner" style="position:relative">
+    <p class="eyebrow" style="text-align:center">proof</p>
+    <h2 class="huge" style="text-align:center;margin:0 auto">Coverage tells us when the space is full.</h2>
+    <div style="margin:24px auto 0;max-width:780px;width:100%"><figure class="fig">
+        <svg viewBox="0 0 440 340" role="img" aria-label="Measured saturation: concepts reached by 20 small-model sequences rises and flattens at 40 of 40 tracked concepts, while a single frontier-model run's reach stays low as a dashed reference line">
+          <g stroke="var(--line)" stroke-width="1">
+            <line x1="64" y1="40" x2="64" y2="272"/>
+            <line x1="64" y1="272" x2="410" y2="272"/>
+            <line x1="64" y1="44" x2="410" y2="44" stroke-dasharray="2 6"/>
+            <line x1="64" y1="101" x2="410" y2="101" stroke-dasharray="2 6"/>
+            <line x1="64" y1="158" x2="410" y2="158" stroke-dasharray="2 6"/>
+            <line x1="64" y1="215" x2="410" y2="215" stroke-dasharray="2 6"/>
+          </g>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9.5" fill="var(--faint)">
+            <text x="56" y="48" text-anchor="end">40</text>
+            <text x="56" y="105" text-anchor="end">30</text>
+            <text x="56" y="162" text-anchor="end">20</text>
+            <text x="56" y="219" text-anchor="end">10</text>
+            <text x="410" y="290" text-anchor="end">generated samples &rarr;</text>
+            <text x="64" y="30">concepts reached</text>
+          </g>
+          <path d="M64 270 C 90 180, 120 110, 170 72 C 210 50, 250 45, 410 44"
+                fill="none" stroke="var(--loop)" stroke-width="2.6"/>
+          <circle cx="410" cy="44" r="5" fill="var(--loop)"/>
+          <line x1="64" y1="222" x2="410" y2="222" stroke="var(--dag)" stroke-width="1.8" stroke-dasharray="7 6"/>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="9.5">
+            <text x="404" y="34" text-anchor="end" fill="var(--loop)">20 sample sequences &middot; all 40 tracked concepts</text>
+            <text x="404" y="240" text-anchor="end" fill="var(--dag)">single frontier run &middot; reaches &le;22% of the space</text>
+          </g>
+          <text x="237" y="322" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+                font-size="10" fill="var(--faint)">pilot &middot; the probe set fills — the meter works</text>
+        </svg>
+      </figure></div>
+    <p class="floodcap" style="text-align:center;margin-top:14px;max-width:60em;margin-left:auto;margin-right:auto">measured &middot; aug 2026 &middot; pilot: 20 sequences from a small open model reach 100% of tracked concepts (40/40, 40/40, 40/40, 39/39) &middot; a single frontier run reaches &le;22% &middot; full-space saturation target: 1,000&times; pilot volume — this raise</p>
+  </div>
+</section>
+
+<section class="slide" id="filling">
+  <div class="inner" style="max-width:1280px;position:relative">
+    <h2 style="text-align:center">Watch the space fill.</h2>
+    <figure class="fig" style="margin:22px auto 0;width:fit-content;max-width:100%">
+      <video src="coverage-all.mp4" autoplay muted loop playsinline
+             style="display:block;margin:0 auto;width:auto;max-width:100%;max-height:58vh;border-radius:10px;border:1px solid var(--line);background:#F4F1EA"></video>
+      <figcaption style="text-align:center">four domains, back to back &middot; 20 sequences from a small open model reach every tracked concept &middot; a single frontier run reaches &le;22% &middot; pilot scale</figcaption>
+    </figure>
+  
+    
+  </div>
+</section>
+
+<section class="slide" id="vlm">
+  <div class="inner" style="position:relative">
+    <h2>We've shipped this technique before.</h2>
+    <p class="body" style="max-width:48em">In VLM systems shipped worldwide, we trained
+    with <b>focused synthetic data</b>: models improved drastically in the target
+    direction — <b>without catastrophic forgetting</b>, the classic failure of
+    narrow fine-tuning.</p>
+    <div class="vidgrid" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+      <figure class="fig">
+        <img src="ev-face.jpg" alt="Field VLM system: face recognition match screen" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block">
+        <figcaption>the problem — swap photo</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="ev-aerial.jpg" alt="Field VLM system: aerial object detection" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block">
+        <figcaption>the problem — swap photo</figcaption>
+      </figure>
+      <figure class="fig">
+        <div style="border:1.5px dashed var(--dag-dim);border-radius:8px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;text-align:center;padding:8px">graph 1<br>improvement in&nbsp;focus</div>
+        <figcaption>drop vlm-graph-1</figcaption>
+      </figure>
+      <figure class="fig">
+        <div style="border:1.5px dashed var(--dag-dim);border-radius:8px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;text-align:center;padding:8px">graph 2<br>no forgetting</div>
+        <figcaption>drop vlm-graph-2</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="slide mega" id="whynow">
+  <div class="inner">
+    <p class="eyebrow">why now</p>
+    <h2 class="huge">Open models caught up.</h2>
+    <p class="sub">General intelligence is becoming a commodity — focused expertise isn't.
+    Training data just became AI's most contested layer.
+    <b>We don't train from scratch.</b></p>
+  </div>
+</section>
+
+<section class="slide mega" id="whyus">
+  <div class="inner">
+    <p class="eyebrow">why us</p>
+    <h2 class="huge">Everyone training experts<br>is waiting for data.</h2>
+    <div class="rowlist">
+      <div class="r"><b>Vertical AI</b> — Harvey $11B &middot; Sierra $15.8B &middot; Abridge $5.3B.
+      <b>Capped at what customers logged.</b></div>
+      <div class="r"><b>Data suppliers</b> — Scale (49%&rarr;Meta, $14.3B) &middot; Surge &middot; Mercor &middot; Gretel (&rarr;NVIDIA).
+      <b>Too small, too shallow for a whole function.</b></div>
+      <div class="r"><b>Specialist trainers</b> — Fastino &middot; Arcee.
+      <b>All depend on data someone already collected.</b></div>
+    </div>
+    <p class="floodcap" style="margin-top:16px">meta&ndash;scale jun 2025 &middot; surge raise talks 2026 &middot; mercor term sheet 2026 &middot; nvidia&ndash;gretel 2025 &middot; harvey / sierra / abridge rounds 2026 &middot; public reporting</p>
+  </div>
+</section>
+
+<section class="slide mega" id="model">
+  <div class="inner">
+    <p class="eyebrow">business</p>
+    <h2 class="huge">One engine.<br>Every output is a product.</h2>
+    <div class="rowlist">
+      <div class="r"><b>A company's own specialist</b> — its data and ontology, expanded to the full sub-space &middot; ~$200k per specialization</div>
+      <div class="r"><b>Role models sold directly</b> — priced by the value of the decisions they make</div>
+      <div class="r"><b>The data itself</b> — licensed to labs and enterprises already spending $1B+/yr</div>
+      <div class="r"><b>The benchmark &amp; decision simulation</b> — the metric that scores the whole category</div>
+    </div>
+    <p class="sub">Each product stands alone. <b>Together they compound.</b></p>
+  </div>
+</section>
+
+<section class="slide mega" id="ask">
+  <div class="inner">
+    <p class="eyebrow">the ask</p>
+    <h2 class="huge">Fund the machine.</h2>
+    <p class="mathstrip">$1.6M / training cycle &nbsp;&times;&nbsp; 9 cycles &nbsp;&asymp;&nbsp; <span class="hot">$15M &middot; 6&ndash;9 months</span></p>
+    <div class="rowlist">
+      <div class="r"><b>$6.5M</b> — data generation + training compute</div>
+      <div class="r"><b>$7M</b> — team</div>
+      <div class="r"><b>$0.5M</b> — benchmark &amp; evaluation</div>
+      <div class="r"><b>$1M</b> — operations</div>
+    </div>
+    <p class="sub" style="margin-top:24px">M1&ndash;3 machine at scale &nbsp;&rarr;&nbsp; M4&ndash;6 first expert trained
+    &nbsp;&rarr;&nbsp; M6&ndash;9 <b>alpha released.</b><br>This round proves the moat for one expert — and positions us for the next round.</p>
+  </div>
+</section>
+
+<section class="slide mega" id="team">
+  <div class="inner">
+    <p class="eyebrow">team</p>
+    <h2 class="huge">Three founders. Twenty years.</h2>
+    <div class="tfaces">
+      <div class="tf"><img src="gagan.jpg" alt="Gagan Gupta"><div><div class="nm">Gagan Gupta</div><div class="rl" style="max-width:30em">trains the models &middot; 20 yrs production deep learning &middot; full LLM lifecycle — data to weights to serving</div></div></div>
+      <div class="tf"><img src="nitin.jpg" alt="Nitin Jindal"><div><div class="nm">Nitin Jindal</div><div class="rl" style="max-width:30em">runs them cheap &middot; inference cost is the COGS &middot; NIST-ranked efficiency &middot; production systems at scale</div></div></div>
+      <div class="tf"><img src="avinash.jpg" alt="Avinash Saxena"><div><div class="nm">Avinash Saxena</div><div class="rl" style="max-width:30em">deploys into companies &middot; built 3, scaled 2 AI products &middot; B2C, operations, media, B2B &middot; across continents</div></div></div>
+    </div>
+    <p class="sub">Together since IIT Delhi, 2006.</p>
+  </div>
+</section>
+
+<section class="slide s-title" id="close">
+  <div class="inner">
+    <p class="brand">Truna</p>
+    <h1>The experts are in training.</h1>
+    <p class="closing">Bet on the data no one else can make.</p>
+    <p class="endfoot">truna.ai &middot; 2026 &middot; end of deck &middot; &larr; to revisit</p>
+  </div>
+</section>
+
+<section class="slide" id="p-nitin">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; founder profiles</p>
+    <div style="display:flex;align-items:center;gap:18px;margin-bottom:4px"><img class="pavatar" src="nitin.jpg" alt="Nitin Jindal" style="width:88px;height:88px;object-fit:cover;border-radius:14px;border:1px solid var(--line)"><h2 style="margin:0">Nitin Jindal</h2></div>
+    <div style="max-width:54em">
+      <ul class="marks">
+        <li><b>LLM &amp; VLM inference optimisation</b> — quantisation, KV-cache,
+        speculative decoding, hardware-aware compilation, on GPU clusters and edge
+        silicon. For an engine that burns billions of tokens,
+        <b>inference cost is the COGS</b>.</li>
+        <li>Extreme-efficiency proofs: face authentication running
+        <b>one year on a battery</b>; 8-face simultaneous recognition on a
+        low-cost embedded chip.</li>
+        <li>Face-recognition algorithm ranked <b>worldwide top-25</b> on the
+        US NIST FRVT benchmark.</li>
+        <li>MS, Vision &amp; AI, Grenoble &middot; IIT Delhi CS '06,
+        <b>Best Graduation Project</b>.</li>
+      </ul>
+    </div>
+    <div class="evrow">
+      <img src="ev-face.jpg" alt="Face recognition match screen">
+      <img src="ev-iris.jpg" alt="Iris scan">
+      <img src="ev-inspect.jpg" alt="Inline camera QA">
+      <img src="ev-toll.jpg" alt="Toll automation">
+    </div>
+    <p class="evcap">field systems — face recognition &middot; iris &middot; inline QA &middot; toll automation</p>
+  </div>
+</section>
+
+<section class="slide" id="p-gagan">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; founder profiles</p>
+    <div style="display:flex;align-items:center;gap:18px;margin-bottom:4px"><img class="pavatar" src="gagan.jpg" alt="Gagan Gupta" style="width:88px;height:88px;object-fit:cover;border-radius:14px;border:1px solid var(--line)"><h2 style="margin:0">Gagan Gupta</h2></div>
+    <div style="max-width:54em">
+      <ul class="marks">
+        <li><b>Full LLM lifecycle</b> — distributed pre-training, instruction tuning,
+        preference optimisation, multimodal (VLM) alignment.</li>
+        <li>Vision systems shipped worldwide: <b>Walmart</b> — photo-to-product search
+        over millions of items in under a second; <b>Disney Orlando</b> — 99%+ people
+        counting at every park gate.</li>
+        <li>Named inventor on <b>four US patents</b> in computer vision and
+        face recognition.</li>
+        <li>Masters, INRIA France &middot; IIT Delhi CS '06 — co-built Roposo's
+        compression, <b>infrastructure cost down 30%</b>.</li>
+      </ul>
+    </div>
+    <div class="evrow">
+      <img src="ev-aerial.jpg" alt="Aerial object detection">
+      <img src="ev-track.jpg" alt="People tracking">
+      <img src="ev-count.jpg" alt="People counting">
+      <img src="ev-synopsis.jpg" alt="Video synopsis">
+    </div>
+    <p class="evcap">field systems — aerial detection &middot; tracking &middot; counting &middot; video synopsis</p>
+  </div>
+</section>
+
+<section class="slide" id="p-avinash">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; founder profiles</p>
+    <div style="display:flex;align-items:center;gap:18px;margin-bottom:4px"><img class="pavatar" src="avinash.jpg" alt="Avinash Saxena" style="width:88px;height:88px;object-fit:cover;border-radius:14px;border:1px solid var(--line)"><h2 style="margin:0">Avinash Saxena</h2></div>
+    <div style="max-width:54em">
+      <ul class="marks">
+        <li><b>Zomato</b> — CTO. India's food-delivery giant, through its early
+        hyper-growth.
+        <span class="now">&rarr; today: Eternal, listed on NSE, ~$28B market cap</span></li>
+        <li><b>Roposo</b> — founder. Consumer short-video platform; $21M raised from
+        <b>Tiger Global</b>, India Quotient, Binny Bansal.
+        <span class="now">&rarr; acquired by InMobi's Glance; Google later invested $145M</span></li>
+        <li><b>BarRaiser</b> — founder &amp; CEO. AI-powered interview intelligence.
+        <span class="now">&rarr; today: running product, tech and sales across India, the US and the UK</span></li>
+        <li><b>IIT Delhi '06</b> — same batch as Nitin and Gagan. <b>BOSS Award</b> for
+        the best experimental project in Physics: a superconducting flywheel for
+        energy storage.</li>
+      </ul>
+    </div>
+    <div class="logos">
+      <span class="lchip"><img src="logo-zomato.png" alt="Zomato"></span>
+      <span class="lchip"><img src="logo-roposo.png" alt="Roposo"></span>
+      <span class="lchip"><img src="logo-barraiser.png" alt="BarRaiser"></span>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="workstreams">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; workstreams &rarr; outputs</p>
+    <h2>What the money does.</h2>
+    <div class="covtab" style="max-width:52em"><table>
+      <tr><th>Workstream</th><th>Output</th></tr>
+      <tr><td>Space mapping &amp; coverage analytics</td>
+          <td>the coverage meter; full-space curves, published</td></tr>
+      <tr><td>Data generation at scale</td>
+          <td>per-expert synthetic corpora across domains</td></tr>
+      <tr><td>Training &amp; evaluation engine</td>
+          <td>M<sub>CEO</sub> checkpoints; ablations at matched size</td></tr>
+      <tr><td>Benchmark development</td>
+          <td>a public business-decision benchmark</td></tr>
+      <tr><td>Compute optimization &amp; infra</td>
+          <td>cost per sequence &amp; per cycle, driven down each cycle</td></tr>
+      <tr><td>Design-partner program</td>
+          <td>partner signed; alpha released for people to use</td></tr>
+    </table></div>
+    <p class="floodcap" style="margin-top:12px">every workstream ends in an artifact an investor can inspect</p>
+  </div>
+</section>
+
+<section class="slide" id="results">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; the harness experiments</p>
+    <h2>We tried the harness path first.</h2>
+    <div class="tri">
+      <div class="cell">
+        <p class="tag">Experiment 1 &middot; the judge</p>
+        <h3>Venture evaluation agent</h3>
+        <p>Models a business deeply — returns <b>its viable shapes</b>, not a verdict.</p>
+      </div>
+      <div class="cell">
+        <p class="tag">Experiment 2 &middot; the planner</p>
+        <h3>Scenario generation agent</h3>
+        <p>Generates <b>many distinct scenarios on purpose</b> — the seed layer of the data engine.</p>
+      </div>
+      <div class="cell">
+        <p class="tag">Experiment 3 &middot; the runner</p>
+        <h3>Autonomous run agent</h3>
+        <p>Runs plans <b>unattended for days</b>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="exhibit-a">
+  <div class="inner" style="max-width:1240px">
+    <p class="eyebrow">Appendix &middot; the harness experiments &middot; witnessed</p>
+    <h2 style="text-align:center">What the harness path built &mdash; and the bar it never reached.</h2>
+    <figure class="fig" style="margin:22px auto 0;width:fit-content;max-width:100%">
+      <video src="exhibit-reel.mp4" autoplay muted loop playsinline
+             style="display:block;margin:0 auto;width:auto;max-width:100%;max-height:62vh;border-radius:10px;border:1px solid var(--line);background:#F4F1EA"></video>
+      <figcaption style="text-align:center;white-space:normal">same goal, four machines &middot; frontier &rarr; newest frontier &rarr; frontier + our harness &rarr; the real-world bar</figcaption>
+    </figure>
+      </div>
+</section>
+
+<section class="slide" id="faq">
+  <div class="inner">
+    <p class="eyebrow">Appendix &middot; before you ask</p>
+    <h2>The questions you're already asking.</h2>
+    <div class="faq">
+      <div class="qa">
+        <p class="q">"Won't the next frontier model make this pointless?"</p>
+        <p class="a">Better base models make our specialists stronger — we retrain on our data. <b>The moat is the coverage data, not the weights.</b></p>
+      </div>
+      <div class="qa">
+        <p class="q">"Is synthetic data any good?"</p>
+        <p class="a">Seed-bound synthetic data circles what it already knows. Ours expands a <b>mapped space with measured coverage.</b></p>
+      </div>
+      <div class="qa">
+        <p class="q">"Why won't the labs build this?"</p>
+        <p class="a">They sell generality. And they're <b>buyers</b> of this layer — $1B+/year — not just rivals.</p>
+      </div>
+      <div class="qa">
+        <p class="q">"How do you measure a CEO model?"</p>
+        <p class="a">Outcomes take years — the decision <b>process</b> is checkable now: facts, constraints, risks, assumptions. <b>That's how boards judge CEOs.</b></p>
+      </div>
+      <div class="qa">
+        <p class="q">"What if a lab copies the method?"</p>
+        <p class="a"><b>Every cycle adds coverage nobody else has.</b> A copy starts at zero on a curve we publish.</p>
+      </div>
+      <div class="qa">
+        <p class="q">"What about hallucinations?"</p>
+        <p class="a">In a generator, imagination is the point — a scenario is <b>a region to master, not a fact to memorize.</b></p>
+      </div>
+      <div class="qa">
+        <p class="q">"Where's revenue?"</p>
+        <p class="a">This seed buys the proof; <b>first specializations (~$200k) land around the next round.</b></p>
+      </div>
+      <div class="qa">
+        <p class="q">"Why this team?"</p>
+        <p class="a">Training (Gagan) + inference cost (Nitin) + <b>live companies</b> (Avinash). The thesis is the three of us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="hud" aria-hidden="false">
+  <div class="row">
+    <span class="keys">&larr; &rarr; / swipe &middot; A all slides &middot; F fullscreen &middot; &#8997;+draw copies context</span>
+    <span class="right">
+      <span id="counter">01 / 27</span>
+      <button id="themebtn" aria-label="Toggle light or dark theme">&#x25D0;</button>
+      <button id="fsbtn" aria-label="Toggle fullscreen">&#x26F6;</button>
+      <svg width="26" height="26" viewBox="0 0 26 26">
+        <circle class="track" cx="13" cy="13" r="10" fill="none" stroke-width="2"/>
+        <circle class="fill" id="progring" cx="13" cy="13" r="10" fill="none" stroke-width="2"
+                stroke-linecap="round" stroke-dasharray="62.83" stroke-dashoffset="62.83"/>
+      </svg>
+      <button id="prev" aria-label="Previous slide">&lsaquo;</button>
+      <button id="next" aria-label="Next slide">&rsaquo;</button>
+    </span>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ---------- ambient arcs ---------- */
+  var cv = document.getElementById('rings'), ctx = cv.getContext('2d');
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var RINGS = [
+    {r:.10, gap:0,   speed: .00022, a:.30, warm:true},
+    {r:.17, gap:0,   speed:-.00016, a:.24, warm:true},
+    {r:.26, gap:0,   speed: .00011, a:.19, warm:true},
+    {r:.37, gap:.9,  speed:-.00007, a:.17, warm:false},
+    {r:.50, gap:1.4, speed: .00005, a:.14, warm:false},
+    {r:.66, gap:1.9, speed:-.000035,a:.12, warm:false},
+    {r:.85, gap:2.6, speed: .000025,a:.10, warm:false}
+  ];
+  function colors(){
+    var cs = getComputedStyle(document.documentElement);
+    return { warm: cs.getPropertyValue('--loop').trim() || '#E08A3C',
+             cold: cs.getPropertyValue('--dag').trim()  || '#7E93AC' };
+  }
+  var C = colors();
+  function size(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  size(); addEventListener('resize', function(){ size(); draw(lastT); });
+  if (matchMedia('(prefers-color-scheme: light)').addEventListener)
+    matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(){ C = colors(); });
+  new MutationObserver(function(){ C = colors(); })
+    .observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+  var lastT = 0;
+  function draw(t){
+    lastT = t;
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    var cx = innerWidth * 1.06, cy = innerHeight * .22;
+    var base = Math.max(innerWidth, innerHeight) * .62;
+    for (var i=0;i<RINGS.length;i++){
+      var g = RINGS[i], R = base * g.r;
+      var rot = t * g.speed + i * 1.7;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, rot + g.gap/2, rot + Math.PI*2 - g.gap/2);
+      ctx.strokeStyle = g.warm ? C.warm : C.cold;
+      ctx.globalAlpha = g.a;
+      ctx.lineWidth = g.warm ? 1.4 : 1.1;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (reduced) { draw(0); }
+  else (function tick(t){ draw(t||0); requestAnimationFrame(tick); })();
+
+  /* ---------- slide engine ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var n = slides.length, cur = 0;
+  var stacked = /[?&]all\b/.test(location.search);
+  var themeOverride = (location.search.match(/[?&]theme=(dark|light)/) || [])[1];
+  if (themeOverride) document.documentElement.dataset.theme = themeOverride;
+  var CIRC = 62.83;
+
+  function pad(x){ return (x<10?'0':'')+x; }
+  function fit(){
+    if (!document.body.classList.contains('slides')) return;
+    var s = slides[cur], innerEl = s.querySelector('.inner');
+    if (!innerEl) return;
+    innerEl.style.zoom = '';
+    var ratio = s.clientHeight / s.scrollHeight;
+    if (ratio < 1) innerEl.style.zoom = String(Math.max(.55, ratio * .97));
+  }
+  function show(i, push){
+    cur = Math.max(0, Math.min(n-1, i));
+    slides.forEach(function(s,k){ s.classList.toggle('active', k===cur); });
+    var ring = document.getElementById('progring');
+    if (ring) ring.style.strokeDashoffset = String(CIRC * (1 - (cur+1)/n));
+    var c = document.getElementById('counter');
+    if (c) c.textContent = pad(cur+1) + ' / ' + pad(n);
+    if (push !== false) { try { history.replaceState(null,'','#'+(cur+1)); } catch(e){} }
+    slides[cur].scrollTop = 0;
+    requestAnimationFrame(fit);
+  }
+  addEventListener('resize', function(){ requestAnimationFrame(fit); });
+  function enterSlides(){
+    document.body.classList.add('slides');
+    var h = parseInt((location.hash||'').replace('#',''),10);
+    show(isNaN(h) ? 0 : h-1, false);
+  }
+  function exitSlides(){
+    document.body.classList.remove('slides');
+    slides.forEach(function(s){ s.classList.remove('active'); });
+  }
+
+  if (!stacked) enterSlides();
+
+  document.addEventListener('keydown', function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var inSlides = document.body.classList.contains('slides');
+    if (e.key === 'a' || e.key === 'A') {
+      inSlides ? exitSlides() : enterSlides();
+      e.preventDefault(); return;
+    }
+    if (e.key === 'f' || e.key === 'F') { toggleFS(); e.preventDefault(); return; }
+    if (!inSlides) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(cur+1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(cur-1); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); e.preventDefault(); }
+    else if (e.key === 'End') { show(n-1); e.preventDefault(); }
+  });
+  var pb = document.getElementById('prev'), nb = document.getElementById('next');
+  if (pb) pb.addEventListener('click', function(){ show(cur-1); });
+  if (nb) nb.addEventListener('click', function(){ show(cur+1); });
+  function toggleFS(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+  }
+  var fb = document.getElementById('fsbtn');
+  if (fb) fb.addEventListener('click', toggleFS);
+  /* ---------- light / dark toggle ---------- */
+  var tb = document.getElementById('themebtn');
+  function effTheme(){
+    return document.documentElement.dataset.theme
+      || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  }
+  function syncTheme(){ if (tb) tb.textContent = effTheme() === 'dark' ? '☀' : '☾'; }
+  if (tb) tb.addEventListener('click', function(){
+    document.documentElement.dataset.theme = effTheme() === 'dark' ? 'light' : 'dark';
+    C = colors();
+    syncTheme();
+  });
+  syncTheme();
+  var tX = null, tY = null;
+  document.addEventListener('touchstart', function(e){
+    if (!document.body.classList.contains('slides')) return;
+    tX = e.touches[0].clientX; tY = e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (tX === null) return;
+    var dx = e.changedTouches[0].clientX - tX, dy = e.changedTouches[0].clientY - tY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1));
+    tX = tY = null;
+  }, {passive:true});
+  window.addEventListener('hashchange', function(){
+    if (!document.body.classList.contains('slides')) return;
+    var h = parseInt((location.hash||'').replace('#',''),10);
+    if (!isNaN(h) && h-1 !== cur) show(h-1, false);
+  });
+})();
+</script>
+
+<script src="annotate.js"></script>
