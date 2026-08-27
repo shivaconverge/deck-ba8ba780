@@ -693,124 +693,17 @@ ul.marks li b{color:var(--ink);font-weight:600}
 
 <section class="slide" id="vlm">
   <div class="inner" style="position:relative">
-    <h2>We've shipped this technique before.</h2>
-    <p class="body" style="max-width:48em">In VLM systems shipped worldwide, we trained
+    <h2 style="text-align:center">We've shipped this technique before.</h2>
+    <p class="body" style="max-width:48em;margin-left:auto;margin-right:auto;text-align:center">In VLM systems shipped worldwide, we trained
     with <b>focused synthetic data</b>: models improved drastically in the target
     direction — <b>without catastrophic forgetting</b>, the classic failure of
     narrow fine-tuning.</p>
-    <div class="vidgrid">
-      <figure class="fig">
-        <img src="vlm-scene-atm.jpg" alt="Deployed ATM threat detection: model output overlaid on camera frame" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block">
-        <figcaption>deployed &middot; atm threat detection — model output overlaid</figcaption>
-      </figure>
-      <figure class="fig">
-        <img src="vlm-scene-yard.jpg" alt="Deployed perimeter security: model output overlaid on camera frame" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block">
-        <figcaption>deployed &middot; perimeter security — model output overlaid</figcaption>
-      </figure>
-      <figure class="fig">
-        <svg viewBox="0 0 640 360" role="img" aria-label="Accuracy versus focused training data for four model sizes converging near the 27B reference">
-          <line x1="56" y1="300" x2="600" y2="300" stroke="var(--line)"/>
-          <line x1="56" y1="257" x2="600" y2="257" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="50" y="260" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">50</text>
-          <line x1="56" y1="204" x2="600" y2="204" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="50" y="207" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">60</text>
-          <line x1="56" y1="150" x2="600" y2="150" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="50" y="153" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">70</text>
-          <line x1="56" y1="97" x2="600" y2="97" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="50" y="100" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">80</text>
-          <line x1="56" y1="43" x2="600" y2="43" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="50" y="46" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">90</text>
-          <line x1="56" y1="43" x2="600" y2="43" stroke="var(--loop)" stroke-width="1.6" stroke-dasharray="7 5"/>
-          <text x="62" y="37" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">general 27B reference &#183; 90.0</text>
-          <polyline points="56,284.0 134,270.6 211,246.0 289,195.2 367,135.3 445,86.2 522,68.5 600,61.0" fill="none" stroke="#b9c4d1" stroke-width="2.2"/>
-          <circle cx="600" cy="61.0" r="3" fill="#b9c4d1"/>
-          <polyline points="56,220.9 134,210.2 211,193.1 289,153.5 367,109.1 445,71.2 522,58.9 600,53.0" fill="none" stroke="#8fa3b8" stroke-width="2.2"/>
-          <circle cx="600" cy="53.0" r="3" fill="#8fa3b8"/>
-          <polyline points="56,192.0 134,182.4 211,167.4 289,134.3 367,95.8 445,63.2 522,52.5 600,47.7" fill="none" stroke="#5f7d99" stroke-width="2.2"/>
-          <circle cx="600" cy="47.7" r="3" fill="#5f7d99"/>
-          <polyline points="56,165.3 134,157.3 211,145.0 289,117.2 367,85.1 445,57.8 522,49.3 600,45.0" fill="none" stroke="#33506e" stroke-width="2.2"/>
-          <circle cx="600" cy="45.0" r="3" fill="#33506e"/>
-          <text x="56" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">before</text>
-          <text x="134" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">10k</text>
-          <text x="211" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">30k</text>
-          <text x="289" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">0.1M</text>
-          <text x="367" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">0.3M</text>
-          <text x="445" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">1M</text>
-          <text x="522" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">2M</text>
-          <text x="600" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">3M</text>
-          <text x="328" y="345" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--faint)">focused training images &#8594;</text>
-          <line x1="134" y1="271" x2="134" y2="157" stroke="var(--loop)" stroke-width="1.4"/>
-          <text x="141" y="224" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">21 pts apart</text>
-          <text x="596" y="67" text-anchor="end" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">3.0 pts apart</text>
-          <line x1="430" y1="210" x2="448" y2="210" stroke="#33506e" stroke-width="2.5"/>
-          <text x="454" y="213" font-family="var(--mono)" font-size="9" fill="var(--muted)">9B &#183; 67.2 &#8594; 89.7</text>
-          <line x1="430" y1="226" x2="448" y2="226" stroke="#5f7d99" stroke-width="2.5"/>
-          <text x="454" y="229" font-family="var(--mono)" font-size="9" fill="var(--muted)">4B &#183; 62.2 &#8594; 89.2</text>
-          <line x1="430" y1="242" x2="448" y2="242" stroke="#8fa3b8" stroke-width="2.5"/>
-          <text x="454" y="245" font-family="var(--mono)" font-size="9" fill="var(--muted)">2B &#183; 56.8 &#8594; 88.2</text>
-          <line x1="430" y1="258" x2="448" y2="258" stroke="#b9c4d1" stroke-width="2.5"/>
-          <text x="454" y="261" font-family="var(--mono)" font-size="9" fill="var(--muted)">0.6B &#183; 45.0 &#8594; 86.7</text>
-          </svg>
-        <figcaption>focused data closes the size gap — the 0.6B gains 41.7 pts; 15&times; the parameters is worth 3.0 at full corpus</figcaption>
-      </figure>
-      <figure class="fig">
-        <svg viewBox="0 0 640 360" role="img" aria-label="Public benchmarks hold steady while deployment conditions improve six to ten points after focused training">
-          <line x1="46" y1="237" x2="600" y2="237" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="40" y="240" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">80</text>
-          <line x1="46" y1="138" x2="600" y2="138" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="40" y="141" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">90</text>
-          <line x1="46" y1="40" x2="600" y2="40" stroke="var(--line)" stroke-dasharray="2 6" opacity=".6"/>
-          <text x="40" y="43" text-anchor="end" font-family="var(--mono)" font-size="9" fill="var(--faint)">100</text>
-          <line x1="324" y1="30" x2="324" y2="300" stroke="var(--line)" stroke-dasharray="4 5"/>
-          <text x="178" y="24" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--muted)">public benchmarks &#183; general skill</text>
-          <text x="470" y="24" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">deployment conditions &#183; the focus</text>
-          <line x1="82" y1="67.6" x2="82" y2="60.7" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="82" cy="67.6" r="4" fill="#9aa4ae"/>
-          <circle cx="82" cy="60.7" r="5" fill="var(--loop)"/>
-          <text x="82" y="51" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+0.7</text>
-          <text x="82" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">IJB-C</text>
-          <line x1="146" y1="53.8" x2="146" y2="46.9" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="146" cy="53.8" r="4" fill="#9aa4ae"/>
-          <circle cx="146" cy="46.9" r="5" fill="var(--loop)"/>
-          <text x="146" y="37" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+0.7</text>
-          <text x="146" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">CFP-FP</text>
-          <line x1="210" y1="96.1" x2="210" y2="85.3" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="210" cy="96.1" r="4" fill="#9aa4ae"/>
-          <circle cx="210" cy="85.3" r="5" fill="var(--loop)"/>
-          <text x="210" y="75" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+1.1</text>
-          <text x="210" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">CPLFW</text>
-          <line x1="274" y1="62.6" x2="274" y2="55.8" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="274" cy="62.6" r="4" fill="#9aa4ae"/>
-          <circle cx="274" cy="55.8" r="5" fill="var(--loop)"/>
-          <text x="274" y="46" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+0.7</text>
-          <text x="274" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">AgeDB</text>
-          <line x1="374" y1="169.0" x2="374" y2="105.0" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="374" cy="169.0" r="4" fill="#9aa4ae"/>
-          <circle cx="374" cy="105.0" r="5" fill="var(--loop)"/>
-          <text x="374" y="95" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+6.5</text>
-          <text x="374" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">low light</text>
-          <line x1="438" y1="195.6" x2="438" y2="122.7" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="438" cy="195.6" r="4" fill="#9aa4ae"/>
-          <circle cx="438" cy="122.7" r="5" fill="var(--loop)"/>
-          <text x="438" y="113" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+7.4</text>
-          <text x="438" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">motion blur</text>
-          <line x1="502" y1="212.3" x2="502" y2="130.6" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="502" cy="212.3" r="4" fill="#9aa4ae"/>
-          <circle cx="502" cy="130.6" r="5" fill="var(--loop)"/>
-          <text x="502" y="121" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+8.3</text>
-          <text x="502" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">occlusion</text>
-          <line x1="566" y1="272.4" x2="566" y2="169.0" stroke="#c9cfd6" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-          <circle cx="566" cy="272.4" r="4" fill="#9aa4ae"/>
-          <circle cx="566" cy="169.0" r="5" fill="var(--loop)"/>
-          <text x="566" y="159" text-anchor="middle" font-family="var(--mono)" font-size="9.5" fill="var(--loop)">+10.5</text>
-          <text x="566" y="318" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--faint)">long range</text>
-          <circle cx="360" cy="345" r="4" fill="#9aa4ae"/><text x="369" y="348" font-family="var(--mono)" font-size="9" fill="var(--muted)">before</text>
-          <circle cx="432" cy="345" r="5" fill="var(--loop)"/><text x="442" y="348" font-family="var(--mono)" font-size="9" fill="var(--muted)">after focused training</text>
-          </svg>
-        <figcaption>general skill kept (+&le;1.1 on public sets) &middot; the focus gained (+6.5&ndash;10.5 in deployment) — no catastrophic forgetting</figcaption>
-      </figure>
-    </div>
-    <p class="floodcap" style="margin-top:12px">measured &middot; vlm tracks: 3M-image focused corpus, securebench-v / atmbench / retailbench &middot; face: 40M-image corpus, NIST FRVT top-25 &middot; full charts in data room</p>
+    <figure class="fig" style="margin:22px auto 0;width:fit-content;max-width:100%">
+      <video src="vlm-reel.mp4" autoplay muted loop playsinline
+             style="display:block;margin:0 auto;width:auto;max-width:100%;max-height:60vh;border-radius:10px;border:1px solid var(--line);background:#F4F1EA"></video>
+      <figcaption style="text-align:center;white-space:normal">deployed frames &middot; focused data closes the size gap (21 pts &rarr; 3.0) &middot; general skill kept, focus gains +6.5&ndash;10.5</figcaption>
+    </figure>
+    <p class="floodcap" style="margin-top:12px;text-align:center">measured &middot; vlm tracks: 3M-image focused corpus, securebench-v / atmbench / retailbench &middot; face: 40M-image corpus, NIST FRVT top-25 &middot; full charts in data room</p>
   </div>
 </section>
 
